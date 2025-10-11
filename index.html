@@ -27,11 +27,11 @@
       })
       .then(() => {
         alert("送信成功しました！");
-        form.reset();
+        form.reset(); // フォームをクリア
       })
       .catch(() => {
         alert("送信に失敗しました");
-        form.reset(); // 失敗時もフォームをクリア
+        form.reset(); // 失敗でもフォームをクリア
       });
     });
   </script>
