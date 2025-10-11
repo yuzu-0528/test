@@ -19,7 +19,6 @@
 
     form.addEventListener("submit", function(e) {
       e.preventDefault(); // ページ遷移を防ぐ
-
       const formData = new FormData(form);
 
       fetch("https://script.google.com/macros/s/AKfycbwotbV3jvRa5amgHPZ3sWwyKJ5Cng3T-HjLb0WLXFcFD9oFUGc9ZGLDAiCrNuHCQuzJ/exec", {
@@ -27,13 +26,12 @@
         body: formData
       })
       .then(() => {
-        // 成功は常にポップアップ
         alert("送信成功しました！");
         form.reset();
       })
       .catch(() => {
-        // ネットワークエラーや送信できなかった場合のみ失敗
         alert("送信に失敗しました");
+        form.reset(); // 失敗時もフォームをクリア
       });
     });
   </script>
