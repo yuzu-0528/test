@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>希望休入力フォーム</title>
-</head>
-<body>
-  <h2>希望休入力フォーム</h2>
+  <head>
+    <meta charset="UTF-8">
+    <title>希望休入力フォーム</title>
+  </head>
+  <body>
+    <h2>希望休入力フォーム</h2>
+    <form id="shiftForm" action="https://script.google.com/macros/s/AKfycbwTsThnSIqneBz9ek8eC8OiRoM5DMd6Phv_7MtNjQm_KKjF0vCn3jD3DkbFM053XtHt/exec" method="POST" target="hidden_iframe">
+      <div>名前：<input type="text" name="name" required></div>
+      <div>開始日時：<input type="datetime-local" name="start" required></div>
+      <div>終了日時：<input type="datetime-local" name="end" required></div>
+      <div>備考：<input type="text" name="note"></div>
+      <button type="submit">送信</button>
+    </form>
+    
+    <!-- urlのページに遷移するのを防ぐ -->
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-  <form action="https://script.google.com/macros/s/AKfycbwyyhqqW6zjvgenMwlElKq1UA-nO3SC_uaphSQirM9ONG9HX3DkMqEqW6tBUCifbixV/exec" method="POST">
-    <div>名前：<input type="text" name="name" required></div>
-    <div>開始日時：<input type="datetime-local" name="start" required></div>
-    <div>終了日時：<input type="datetime-local" name="end" required></div>
-    <div>備考：<input type="text" name="note"></div>
-    <button type="submit">送信</button>
-  </form>
-
-  <script>
-    const form = document.querySelector("form");
-    form.addEventListener("submit", function() {
-      // 送信後にアラート表示
-      setTimeout(() => alert("送信しました！"), 100);
-    });
-  </script>
-</body>
+    <script>
+      const form = document.getElementById("shiftForm");
+      form.addEventListener("submit", function () {   // 送信ボタンを押したときの処理
+        alert("送信しました！");
+        form.reset();
+      });
+    </script>
+  </body>
 </html>
-
-
