@@ -26,9 +26,13 @@
         method: "POST",
         body: formData
       })
-      .then(() => {
-        alert("送信しました！"); // 送信完了通知
-        form.reset();            // フォームリセット
+      .then(response => {
+        if (response.ok) {
+          alert("送信成功しました！");
+          form.reset(); // フォームリセット
+        } else {
+          alert("送信に失敗しました");
+        }
       })
       .catch(() => {
         alert("送信に失敗しました");
