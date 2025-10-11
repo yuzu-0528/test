@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>希望休入力フォーム</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
   <h2>希望休入力フォーム</h2>
-  <form id="shiftForm" action="https://script.google.com/macros/s/AKfycbwNwOUu5-ZUQ1OAgj3d0fnkxYHU9cisivEzuonpbDhgAf_o0hq-v7HiZRzrCl1QRLTU/exec" method="POST">
+  <form id="shiftForm" action="https://script.google.com/macros/s/AKfycbwotbV3jvRa5amgHPZ3sWwyKJ5Cng3T-HjLb0WLXFcFD9oFUGc9ZGLDAiCrNuHCQuzJ/exec" method="POST">
     <div>名前：<input type="text" name="name" required></div>
     <div>開始日時：<input type="datetime-local" name="start" required></div>
     <div>終了日時：<input type="datetime-local" name="end" required></div>
@@ -14,8 +18,11 @@
     <button type="submit">送信</button>
   </form>
 
+  <div class="result" id="result"></div>
+
   <script>
     const form = document.getElementById("shiftForm");
+    const resultDiv = document.getElementById("result");
 
     form.addEventListener("submit", function(e) {
       e.preventDefault(); // ページ遷移を防ぐ
@@ -26,16 +33,20 @@
         method: 'POST',
         body: formData
       })
-      .then(response => response.json()) // GASの返すJSONを受け取る
+      .then(response => response.json())
       .then(data => {
-        alert("送信しました！\n名前: " + data.name +
-              "\n開始: " + data.start +
-              "\n終了: " + data.end +
-              "\n備考: " + data.note);
-        form.reset(); // フォームリセット
+        // 画面に送信結果を表示
+        resultDiv.innerHTML = `
+          <strong>送信完了！</strong><br>
+          名前: ${data.name}<br>
+          開始: ${data.start}<br>
+          終了: ${data.end}<br>
+          備考: ${data.note}
+        `;
+        form.reset(); // フォームをリセット
       })
       .catch(error => {
-        alert("送信に失敗しました");
+        resultDiv.innerHTML = `<strong>送信に失敗しました</strong>`;
         console.error(error);
       });
     });
