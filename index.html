@@ -6,7 +6,8 @@
 </head>
 <body>
   <h2>希望休入力フォーム</h2>
-  <form id="shiftForm" action="GASの/exec URLをここに貼る" method="POST">
+
+  <form action="https://script.google.com/macros/s/AKfycbztJ0fTsSTC1zD7V9bGRrt1Gzj0CpH7WcxB0EifFzZC_lGwW3Op-iGAXu6tvkRX1mxE/exec" method="POST">
     <div>名前：<input type="text" name="name" required></div>
     <div>開始日時：<input type="datetime-local" name="start" required></div>
     <div>終了日時：<input type="datetime-local" name="end" required></div>
@@ -15,9 +16,10 @@
   </form>
 
   <script>
-    const form = document.getElementById("shiftForm");
+    const form = document.querySelector("form");
     form.addEventListener("submit", function() {
-      setTimeout(() => alert("送信しました！"), 100); // 送信直後にアラート
+      // 送信後にアラート表示
+      setTimeout(() => alert("送信しました！"), 100);
     });
   </script>
 </body>
