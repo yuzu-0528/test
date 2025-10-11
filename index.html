@@ -16,9 +16,8 @@
 
   <script>
     const form = document.getElementById("shiftForm");
-    form.addEventListener("submit", function(event) {
-      // 送信後にアラート表示
-      setTimeout(() => alert("送信しました！"), 100);
+    form.addEventListener("submit", function() {
+      setTimeout(() => alert("送信しました！"), 100); // 送信直後にアラート
     });
   </script>
 </body>
