@@ -23,17 +23,10 @@
 
       form.reset(); // 送信前にフォームをクリア
 
+      // バックグラウンドで送信（成功/失敗の表示なし）
       fetch("https://script.google.com/macros/s/AKfycbwotbV3jvRa5amgHPZ3sWwyKJ5Cng3T-HjLb0WLXFcFD9oFUGc9ZGLDAiCrNuHCQuzJ/exec", {
         method: "POST",
         body: formData
-      })
-      .then(() => {
-        // ネットワーク的に送信できたら成功扱い
-        alert("送信成功しました！");
-      })
-      .catch(() => {
-        // ネットワークエラーや fetch が失敗した場合のみ失敗
-        alert("送信に失敗しました");
       });
     });
   </script>
