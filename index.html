@@ -27,11 +27,15 @@
         method: "POST",
         body: formData
       })
-      .then(() => {
-        alert("送信成功しました！");
+      .then(response => {
+        if (response.ok) {
+          alert("送信成功しました！");
+        } else {
+          alert("送信に失敗しました（サーバーエラー）");
+        }
       })
       .catch(() => {
-        alert("送信に失敗しました");
+        alert("送信に失敗しました（ネットワークエラー）");
       });
     });
   </script>
