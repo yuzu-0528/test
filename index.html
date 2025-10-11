@@ -21,17 +21,17 @@
       e.preventDefault(); // ページ遷移を防ぐ
       const formData = new FormData(form);
 
+      form.reset(); // 送信前にフォームをクリア
+
       fetch("https://script.google.com/macros/s/AKfycbwotbV3jvRa5amgHPZ3sWwyKJ5Cng3T-HjLb0WLXFcFD9oFUGc9ZGLDAiCrNuHCQuzJ/exec", {
         method: "POST",
         body: formData
       })
       .then(() => {
         alert("送信成功しました！");
-        form.reset(); // フォームをクリア
       })
       .catch(() => {
         alert("送信に失敗しました");
-        form.reset(); // 失敗でもフォームをクリア
       });
     });
   </script>
