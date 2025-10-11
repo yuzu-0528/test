@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <title>希望休入力フォーム</title>
-  </head>
-  <body>
-    <h2>希望休入力フォーム</h2>
-    <form id="shiftForm" action="https://script.google.com/macros/s/AKfycbybVzUvKnkT72wQtVBfVrGJbUyfN9JmA60ywUUiQcMOACUHteQ5E2XL5L13Sz6CF0uZ/exec" method="POST" target="hidden_iframe">
-      <div>名前：<input type="text" name="name" required></div>
-      <div>開始日時：<input type="datetime-local" name="start" required></div>
-      <div>終了日時：<input type="datetime-local" name="end" required></div>
-      <div>備考：<input type="text" name="note"></div>
-      <button type="submit">送信</button>
-    </form>
-    
-    <!-- urlのページに遷移するのを防ぐ -->
-    <iframe name="hidden_iframe" style="display:none;"></iframe>
+<head>
+  <meta charset="UTF-8">
+  <title>希望休入力フォーム</title>
+</head>
+<body>
+  <h2>希望休入力フォーム</h2>
+  <form id="shiftForm" action="https://script.google.com/macros/s/AKfycbwNwOUu5-ZUQ1OAgj3d0fnkxYHU9cisivEzuonpbDhgAf_o0hq-v7HiZRzrCl1QRLTU/exec" method="POST">
+    <div>名前：<input type="text" name="name" required></div>
+    <div>開始日時：<input type="datetime-local" name="start" required></div>
+    <div>終了日時：<input type="datetime-local" name="end" required></div>
+    <div>備考：<input type="text" name="note"></div>
+    <button type="submit">送信</button>
+  </form>
 
-    <script>
-      const form = document.getElementById("shiftForm");
-      form.addEventListener("submit", function () {   // 送信ボタンを押したときの処理
-        alert("送信しました！");
-        form.reset();
+  <script>
+    const form = document.getElementById("shiftForm");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault(); // ページ遷移を防ぐ
+
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json()) // GASの返すJSONを受け取る
+      .then(data => {
+        alert("送信しました！\n名前: " + data.name +
+              "\n開始: " + data.start +
+              "\n終了: " + data.end +
+              "\n備考: " + data.note);
+        form.reset(); // フォームリセット
+      })
+      .catch(error => {
+        alert("送信に失敗しました");
+        console.error(error);
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
