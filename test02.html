@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カレンダー 月表示調整</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; }
+
+  #controls {
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 5px 10px;
+    font-size: 14px;
+    margin-right: 5px;
+  }
+
+  /* カレンダーグリッド */
+  #calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    width: 100%;
+  }
+
+  .weekday, .day {
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  .weekday {
+    font-weight: bold;
+    text-align: center;
+    background: #f0f0f0;
+    padding: 5px;
+  }
+
+  .weekday.sunday { color: red; }
+  .weekday.saturday { color: blue; }
+
+  .day {
+    min-height: 144px;
+    text-align: left;
+    padding: 5px;
+    position: relative;
+  }
+
+  .day span.date-num {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .day.sunday span.date-num { color: red; }
+  .day.saturday span.date-num { color: blue; }
+
+  .event {
+    margin-top: 25px;
+    font-size: 14px;
+    background-color: #e0f7fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<h2 id="month-year"></h2>
+
+<div id="controls">
+  <button id="prev-month">前の月</button>
+  <button id="next-month">次の月</button>
+</div>
+
+<div id="calendar"></div>
+
+<script>
+let currentYear, currentMonth;
+let events = []; // スプレッドシートのデータを格納
+
+// スプレッドシートから予定を取得
+async function fetchEvents() {
+  const url = "https://script.google.com/macros/s/AKfycbyht2RHQ0XorPlgG97PK5wNz3hguWgOrwYaVRR5cdqcf4eCgjeIZNj-fJDdxcouYYFn/exec"; // GASのURLに置き換え
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    events = data.map(ev => ({
+      name: ev.name,
+      start: new Date(ev.start),
+      end: new Date(ev.end),
+      note: ev.note
+    }));
+  } catch(e) {
+    console.error("イベント取得エラー:", e);
+    events = [];
+  }
+}
+
+// カレンダー描画
+function renderCalendar(year, month) {
+  const calendar = document.getElementById("calendar");
+  calendar.innerHTML = "";
+
+  const firstDate = new Date(year, month, 1);
+  currentYear = year;
+  currentMonth = month;
+
+  const monthYear = document.getElementById("month-year");
+  monthYear.textContent = `${year}年 ${month+1}月`;
+
+  const weekdays = ["日","月","火","水","木","金","土"];
+  weekdays.forEach((w,i)=>{
+    const header = document.createElement("div");
+    header.className = "weekday";
+    if(i===0) header.classList.add("sunday");
+    if(i===6) header.classList.add("saturday");
+    header.textContent = w;
+    calendar.appendChild(header);
+  });
+
+  const startWeekday = firstDate.getDay();
+  for(let i=0;i<startWeekday;i++){
+    const empty = document.createElement("div");
+    empty.className="day";
+    calendar.appendChild(empty);
+  }
+
+  const totalDays = new Date(year, month+1, 0).getDate();
+  for(let i=1;i<=totalDays;i++){
+    const div = document.createElement("div");
+    div.className="day";
+
+    const weekday = new Date(year, month, i).getDay();
+    if(weekday===0) div.classList.add("sunday");
+    if(weekday===6) div.classList.add("saturday");
+
+    const dateNum = document.createElement("span");
+    dateNum.className = "date-num";
+    dateNum.textContent = i;
+    div.appendChild(dateNum);
+
+    // イベントをチェックして追加
+    const dayDate = new Date(year, month, i);
+    events.forEach(ev => {
+      if(dayDate >= ev.start && dayDate <= ev.end){
+        const evDiv = document.createElement("div");
+        evDiv.className = "event";
+        evDiv.textContent = ev.name + (ev.note ? ` (${ev.note})` : "");
+        div.appendChild(evDiv);
+      }
+    });
+
+    calendar.appendChild(div);
+  }
+}
+
+// 次の月ボタン
+document.getElementById("next-month").addEventListener("click", ()=>{
+  let nextMonth = currentMonth + 1;
+  let year = currentYear;
+  if(nextMonth > 11){
+    nextMonth = 0;
+    year += 1;
+  }
+  renderCalendar(year, nextMonth);
+});
+
+// 前の月ボタン
+document.getElementById("prev-month").addEventListener("click", ()=>{
+  let prevMonth = currentMonth - 1;
+  let year = currentYear;
+  if(prevMonth < 0){
+    prevMonth = 11;
+    year -= 1;
+  }
+  renderCalendar(year, prevMonth);
+});
+
+// 初期表示
+(async () => {
+  await fetchEvents(); // データ取得
+  const today = new Date();
+  renderCalendar(today.getFullYear(), today.getMonth());
+})();
+</script>
+
+</body>
+</html>
