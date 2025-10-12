@@ -16,18 +16,22 @@
 
   <script>
     const form = document.getElementById("shiftForm");
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzgKZZu-o7YEScL0xEw5H54SBPAkcbtvOPHffgER49jVJpA9yACz3wVKKPGI2GY1sJH/exec"; // ここを差し替え
 
-    form.addEventListener("submit", function(e) {
-      e.preventDefault(); // ページ遷移を防ぐ
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
       const formData = new FormData(form);
+      form.reset(); // 入力内容をクリア
 
-      form.reset(); // 送信前にフォームをクリア
-
-      // バックグラウンドで送信（成功/失敗の表示なし）
-      fetch("https://script.google.com/macros/s/AKfycbyht2RHQ0XorPlgG97PK5wNz3hguWgOrwYaVRR5cdqcf4eCgjeIZNj-fJDdxcouYYFn/exec", {
-        method: "POST",
-        body: formData
-      });
+      try {
+        await fetch(GAS_URL, {
+          method: "POST",
+          body: formData
+        });
+        console.log("送信成功");
+      } catch (error) {
+        console.error("送信失敗:", error);
+      }
     });
   </script>
 </body>
