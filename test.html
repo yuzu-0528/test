@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>カレンダー 月表示調整</title>
+<title>カレンダー表示</title>
 <style>
   body { font-family: sans-serif; padding: 20px; }
 
@@ -16,7 +16,7 @@
     margin-right: 5px;
   }
 
-  /* カレンダーグリッド */
+  /* カレンダー全体 */
   #calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -46,6 +46,7 @@
     text-align: left;
     padding: 5px;
     position: relative;
+    vertical-align: top;
   }
 
   .day span.date-num {
@@ -60,11 +61,14 @@
   .day.saturday span.date-num { color: blue; }
 
   .event {
-    margin-top: 25px;
-    font-size: 14px;
+    margin-top: 24px;
+    font-size: 13px;
     background-color: #e0f7fa;
     padding: 2px 4px;
     border-radius: 3px;
+    white-space: nowrap; /* 1行に固定 */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
 </head>
@@ -83,9 +87,9 @@
 let currentYear, currentMonth;
 let events = []; // スプレッドシートのデータを格納
 
-// スプレッドシートから予定を取得
+// ✅ スプレッドシートから予定を取得
 async function fetchEvents() {
-  const url = "https://script.google.com/macros/s/AKfycbyht2RHQ0XorPlgG97PK5wNz3hguWgOrwYaVRR5cdqcf4eCgjeIZNj-fJDdxcouYYFn/exec"; // GASのURLに置き換え
+  const url = "https://script.google.com/macros/s/AKfycbyht2RHQ0XorPlgG97PK5wNz3hguWgOrwYaVRR5cdqcf4eCgjeIZNj-fJDdxcouYYFn/exec"; // あなたのGASのURLに置き換え
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -101,7 +105,7 @@ async function fetchEvents() {
   }
 }
 
-// カレンダー描画
+// ✅ カレンダー描画
 function renderCalendar(year, month) {
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
@@ -144,13 +148,18 @@ function renderCalendar(year, month) {
     dateNum.textContent = i;
     div.appendChild(dateNum);
 
-    // イベントをチェックして追加
+    // ✅ イベントをチェックして追加
     const dayDate = new Date(year, month, i);
     events.forEach(ev => {
-      if(dayDate >= ev.start && dayDate <= ev.end){
+      const start = new Date(ev.start);
+      const end = new Date(ev.end);
+      if(dayDate >= start && dayDate <= end){
         const evDiv = document.createElement("div");
         evDiv.className = "event";
-        evDiv.textContent = ev.name + (ev.note ? ` (${ev.note})` : "");
+
+        const startTime = start.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+        const endTime = end.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+        evDiv.textContent = `${ev.name} ${startTime}〜${endTime}` + (ev.note ? ` ${ev.note}` : "");
         div.appendChild(evDiv);
       }
     });
@@ -159,7 +168,7 @@ function renderCalendar(year, month) {
   }
 }
 
-// 次の月ボタン
+// ✅ 次の月ボタン
 document.getElementById("next-month").addEventListener("click", ()=>{
   let nextMonth = currentMonth + 1;
   let year = currentYear;
@@ -170,7 +179,7 @@ document.getElementById("next-month").addEventListener("click", ()=>{
   renderCalendar(year, nextMonth);
 });
 
-// 前の月ボタン
+// ✅ 前の月ボタン
 document.getElementById("prev-month").addEventListener("click", ()=>{
   let prevMonth = currentMonth - 1;
   let year = currentYear;
@@ -181,7 +190,7 @@ document.getElementById("prev-month").addEventListener("click", ()=>{
   renderCalendar(year, prevMonth);
 });
 
-// 初期表示
+// ✅ 初期表示
 (async () => {
   await fetchEvents(); // データ取得
   const today = new Date();
