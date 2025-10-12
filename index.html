@@ -16,12 +16,12 @@
 
   <script>
     const form = document.getElementById("shiftForm");
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbx1qAtM2Hee80RaulOAButtv97nz6AOv3Zji46V_JYKOrHGvlkBfoxVjnvFZ0E2mWCL/exec"; // ここを差し替え
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbx1qAtM2Hee80RaulOAButtv97nz6AOv3Zji46V_JYKOrHGvlkBfoxVjnvFZ0E2mWCL/exec";
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      form.reset(); // 入力内容をクリア
+      form.reset();
 
       try {
         await fetch(GAS_URL, {
@@ -36,4 +36,3 @@
   </script>
 </body>
 </html>
-
