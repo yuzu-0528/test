@@ -76,22 +76,22 @@
 <div id="calendar"></div>
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbx1qAtM2Hee80RaulOAButtv97nz6AOv3Zji46V_JYKOrHGvlkBfoxVjnvFZ0E2mWCL/exec"; // ここを同じURLにする
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx1qAtM2Hee80RaulOAButtv97nz6AOv3Zji46V_JYKOrHGvlkBfoxVjnvFZ0E2mWCL/exec";
 let currentYear, currentMonth;
 let events = [];
 
-// イベントデータを取得
+// データを取得
 async function fetchEvents() {
   try {
     const res = await fetch(GAS_URL);
     events = await res.json();
   } catch (e) {
-    console.error("イベント取得エラー:", e);
+    console.error("データ取得エラー:", e);
     events = [];
   }
 }
 
-// カレンダー描画
+// カレンダー表示
 function renderCalendar(year, month) {
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
@@ -183,4 +183,3 @@ document.getElementById("prev-month").addEventListener("click", () => {
 
 </body>
 </html>
-
